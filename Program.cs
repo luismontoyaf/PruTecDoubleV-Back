@@ -27,6 +27,11 @@ builder.Services.AddScoped<IProductRepository>(provider =>
     new ProductRepository(connectionString));  
 builder.Services.AddScoped<IProductService, ProductService>();
 
+builder.Services.AddScoped<IInvoiceRepository>(provider =>
+    new InvoiceRepository(connectionString));
+
+builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+
 builder.Services.AddControllers();
 
 // Add services to the container.

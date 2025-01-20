@@ -10,7 +10,6 @@ namespace MyBack.Repositories
     {
         private readonly string _connectionString;
 
-        // Constructor que recibe la cadena de conexión
         public ClientRepository(string connectionString)
         {
             _connectionString = connectionString;
@@ -24,7 +23,6 @@ namespace MyBack.Repositories
             {
                 connection.Open();
 
-                // Llamamos al procedimiento almacenado
                 using (var command = new SqlCommand("sp_GetClientes", connection))
                 {
                     command.CommandType = System.Data.CommandType.StoredProcedure;

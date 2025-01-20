@@ -20,10 +20,8 @@ namespace MyBack.Controllers
         [HttpGet]
         public IActionResult GetProducts()
         {
-            // Llamamos al servicio que obtiene los datos
             List<Product> productos = _productService.GetAllProducts();
 
-            // Devolvemos los datos directamente
             return Ok(productos);
         }
     }

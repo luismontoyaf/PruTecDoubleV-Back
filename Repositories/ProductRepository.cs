@@ -11,7 +11,6 @@ namespace MyBack.Repositories
     {
         private readonly string _connectionString;
 
-        // Constructor que recibe la cadena de conexión
         public ProductRepository(string connectionString)
         {
             _connectionString = connectionString;
@@ -25,7 +24,6 @@ namespace MyBack.Repositories
             {
                 connection.Open();
 
-                // Llamamos al procedimiento almacenado
                 using (var command = new SqlCommand("sp_GetProductos", connection))
                 {
                     command.CommandType = System.Data.CommandType.StoredProcedure;
@@ -38,7 +36,7 @@ namespace MyBack.Repositories
                             {
                                 Id = (int)reader["Id"],
                                 NombreProducto = reader["NombreProducto"].ToString(),
-                                ImagenProducto = (byte[])reader["ImagenProducto"],
+                                ImagenProducto = reader["ImagenProducto"] == DBNull.Value ? null : (byte[])reader["ImagenProducto"],
                                 PrecioUnitario = (decimal)reader["PrecioUnitario"],
                                 evt = reader["ext"].ToString()
                             };

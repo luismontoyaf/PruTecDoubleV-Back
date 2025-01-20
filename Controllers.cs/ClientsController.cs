@@ -20,10 +20,8 @@ namespace MyBack.Controllers
         [HttpGet]
         public IActionResult GetClientes()
         {
-            // Llamamos al servicio que obtiene los datos
             List<Client> clientes = _clienteService.GetAllClientes();
 
-            // Devolvemos los datos directamente
             return Ok(clientes);
         }
     }
