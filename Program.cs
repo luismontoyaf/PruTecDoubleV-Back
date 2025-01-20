@@ -1,15 +1,47 @@
+using MyBack.Repositories;
+using MyBack.Models;
+using MyBack.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200") // URL del frontend Angular
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+
+// Configuración de los repositorios y servicios
+builder.Services.AddScoped<IClientRepository>(provider => 
+    new ClientRepository(connectionString)); 
+builder.Services.AddScoped<IClientService, ClientService>();
+
+builder.Services.AddScoped<IProductRepository>(provider => 
+    new ProductRepository(connectionString));  
+builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddControllers();
+
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors("AllowAngularApp");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
@@ -31,8 +63,11 @@ app.MapGet("/weatherforecast", () =>
         .ToArray();
     return forecast;
 })
-.WithName("GetWeatherForecast");
+.WithName("GetWeatherForecast")
+.WithOpenApi();
 
+app.UseAuthorization();
+app.MapControllers();
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
